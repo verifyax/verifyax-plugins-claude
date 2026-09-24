@@ -132,6 +132,10 @@ A quick glossary so the examples above make sense:
 
 ## Learn more
 
+- **Choosing between the plugins, the skill and the SDK — and which Claude surface supports what:**
+  [`using-verifyax-with-claude.md`](https://github.com/verifyax/verifyax-mcp/blob/main/docs/using-verifyax-with-claude.md),
+  the canonical guide. It's kept in the repo that changes the code, so it tracks versions and client
+  support rather than drifting from them.
 - **Platform & sign-up:** [verifyax.com](https://verifyax.com) · [console.verifyax.com](https://console.verifyax.com)
 - **Company:** [Conscium](https://conscium.com)
 - **Full API reference:** the canonical OpenAPI contract at
