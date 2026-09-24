@@ -4,7 +4,7 @@
 
 Please report security issues **privately** — do not open a public issue or PR.
 
-- Preferred: open a [GitHub private security advisory](https://github.com/verifyax/verifyax-plugins/security/advisories/new).
+- Preferred: open a [GitHub private security advisory](https://github.com/verifyax/verifyax-plugins-claude/security/advisories/new).
 - Or email **security@conscium.com** (subject: `verifyax-plugins security`).
 
 Include enough detail to reproduce (which plugin, steps, and impact). We'll acknowledge your report and keep you posted on remediation.

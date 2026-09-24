@@ -47,6 +47,27 @@ for (const entry of marketplace.plugins ?? []) {
     plugin.version === entry.version,
     `${label}: version mismatch — marketplace "${entry.version}" vs plugin.json "${plugin.version}"`
   );
+
+  // A plugin that launches a pinned npm MCP server must pin the version it is
+  // named after: the marketplace promises "plugin 0.3.x ↔ server 0.3.x", and a
+  // stale pin silently holds every user below the server release they expect
+  // (0.3.3 sat below the 0.3.4 security fix for weeks before anyone noticed).
+  for (const [server, config] of Object.entries(plugin.mcpServers ?? {})) {
+    const pins = (config.args ?? []).flatMap((arg) =>
+      typeof arg === 'string' ? [...arg.matchAll(/^(@[^@\s]+\/[^@\s]+)@(.+)$/g)] : []
+    );
+    for (const [, pkg, pinned] of pins) {
+      check(
+        pinned === plugin.version,
+        `${label}: ${server} pins ${pkg}@${pinned} but the plugin is ${plugin.version} — ` +
+          'bump the pin and the plugin version together'
+      );
+    }
+    check(
+      (config.args ?? []).every((arg) => typeof arg !== 'string' || !/^@[^@\s]+\/[^@\s]+$/.test(arg)),
+      `${label}: ${server} launches an unpinned package — pin it to an exact version`
+    );
+  }
 }
 
 if (errors.length > 0) {

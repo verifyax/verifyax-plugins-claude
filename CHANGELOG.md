@@ -153,6 +153,30 @@ and backward-compatible — no breaking changes to existing workflows.
 
 ## verifyax-mcp
 
+### [0.3.5] — 2026-09-24
+
+#### Security
+
+- **Catch up to `@verifyax/mcp-server` 0.3.4**, which the plugin had never picked up: the plugin
+  stayed pinned to server `0.3.3` while 0.3.4 shipped a security hotfix — keyed HMAC-SHA-256 API-key
+  fingerprints replacing synchronous PBKDF2 in the HTTP transport, a direct-peer
+  session-initialization limiter, and patched transitive dependencies. Anyone on plugin 0.3.3 was
+  running below that fix.
+
+#### Added
+
+- Tracked the server 0.3.5 release: **MCP Tasks** for the long-running `generate_scenario` and
+  `evaluate_agent` tools. Task-capable clients get a pollable handle immediately instead of holding
+  `tools/call` open for the whole run (evaluations can take ~30 min); other clients keep the
+  existing blocking behaviour. `tasks/cancel` maps to the VerifyAX job/simulation cancel APIs.
+  **Plugin 0.3.5 ↔ server 0.3.5.**
+
+#### Changed
+
+- `scripts/check-manifests.mjs` now fails CI when a plugin's pinned MCP server version doesn't match
+  the plugin's own version, or when a server is launched unpinned — the drift that let 0.3.3 sit
+  below the 0.3.4 fix is now caught before merge.
+
 ### [0.3.3] — 2026-07-28
 
 #### Changed
