@@ -38,6 +38,24 @@ you); **`verifyax-api`** when you want Claude to write scripts against the API. 
 **`verifyax-claude-agent`** when the thing you want to *evaluate* is itself a Claude Code agent —
 it exposes yours for VerifyAX to score (and drives `verifyax-api` under the hood).
 
+### Where each plugin runs
+
+These plugins target **Claude Code**. Two of them need a local machine, so they don't run in
+Claude.ai chat or Cowork — [plugins with local MCP servers don't load
+there](https://support.claude.com/en/articles/13837440-use-plugins-in-claude), and neither do
+plugins that shell out to local binaries.
+
+| Plugin                  | Claude Code | Claude.ai chat / Cowork                                            |
+| ----------------------- | ----------- | ------------------------------------------------------------------ |
+| `verifyax-api`          | ✅          | ✅ — it's a pure skill (also uploadable as a `.skill`, see below)   |
+| `verifyax-mcp`          | ✅          | ❌ — launches a local `npx` MCP server                             |
+| `verifyax-claude-agent` | ✅          | ❌ — needs local Python, the `claude` CLI, and a tunnel            |
+
+On an **Enterprise plan your admin may block this entirely** — org policy can restrict which
+marketplaces users may add, mark individual plugins unavailable, or disable local MCP servers
+outright. If `/plugin marketplace add` does nothing, that's usually why; ask your Claude
+administrator.
+
 ## Before you start
 
 1. **Create a VerifyAX account** (or sign in) at the [VerifyAX console](https://console.verifyax.com).
@@ -51,7 +69,7 @@ it exposes yours for VerifyAX to score (and drives `verifyax-api` under the hood
 Add the marketplace, then install whichever plugin you want:
 
 ```
-/plugin marketplace add verifyax/verifyax-plugins
+/plugin marketplace add verifyax/verifyax-plugins-claude
 /plugin install verifyax-api@verifyax-plugins             # the skill
 /plugin install verifyax-mcp@verifyax-plugins             # the MCP server
 /plugin install verifyax-claude-agent@verifyax-plugins    # expose YOUR Claude agent for eval (auto-installs verifyax-api)
@@ -151,7 +169,7 @@ the GitHub Release. Build output lives in `dist/` (gitignored).
 
 Each plugin pins an explicit `version` in its `plugin.json` and is versioned independently. Users
 only receive updates when we bump the version, so we bump on every release. Current versions:
-**`verifyax-api` 0.3.0**, **`verifyax-mcp` 0.3.3**, **`verifyax-claude-agent` 0.1.2**. See
+**`verifyax-api` 0.3.0**, **`verifyax-mcp` 0.3.5**, **`verifyax-claude-agent` 0.1.2**. See
 [`CHANGELOG.md`](CHANGELOG.md) for release notes.
 
 ## License
@@ -161,7 +179,7 @@ Apache-2.0. See [`LICENSE`](LICENSE).
 ## Contributing
 
 Found a bug, an outdated endpoint, or have an idea for a new plugin (workbench helpers, scenario
-authoring, etc.)? [Open an issue](https://github.com/verifyax/verifyax-plugins/issues) and we'll take
+authoring, etc.)? [Open an issue](https://github.com/verifyax/verifyax-plugins-claude/issues) and we'll take
 it from there. The maintainers handle changes internally, so external pull requests aren't accepted —
 issues are the best way to reach us. See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the model, and
 [`SECURITY.md`](SECURITY.md) to report a vulnerability privately.

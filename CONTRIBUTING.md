@@ -8,7 +8,7 @@ This is an **Apache-2.0** project, but it's **maintained internally by Conscium*
 marketplace and the VerifyAX API contract in sync, the maintainers handle changes — so **external
 pull requests are not accepted**.
 
-**The best way to help is to [open an issue](https://github.com/verifyax/verifyax-plugins/issues):**
+**The best way to help is to [open an issue](https://github.com/verifyax/verifyax-plugins-claude/issues):**
 a bug, an outdated endpoint, a broken install, or an idea for a new plugin. We triage from there.
 
 For **security issues**, follow [`SECURITY.md`](SECURITY.md) — report privately, not via a public issue.
