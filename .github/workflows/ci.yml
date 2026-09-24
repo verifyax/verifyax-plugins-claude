@@ -87,3 +87,26 @@ jobs:
 
       - name: Validate pinned sandbox definition
         run: docker build --check -f plugins/verifyax-claude-agent/sandbox/Dockerfile plugins/verifyax-claude-agent
+
+      - name: Build the sandbox image
+        # `--check` above only lints the Dockerfile — it never executes a RUN
+        # step, so it passes on a base image the build cannot actually use. A
+        # node 20 -> 26 bump linted clean and then failed here: the newer Debian
+        # ships a distro `packaging` with no RECORD file, which pip refuses to
+        # replace under --break-system-packages. Build it for real so a base
+        # image or dependency bump can't merge green and break the sandbox.
+        run: |
+          docker build -t cvx-sandbox-ci \
+            -f plugins/verifyax-claude-agent/sandbox/Dockerfile \
+            plugins/verifyax-claude-agent
+
+      - name: Verify the sandbox runtime identity
+        # The image reclaims UID/GID 1000 from the base image's `node` account so
+        # run.sh's uid=1000 tmpfs mounts stay writable. A base image that stops
+        # owning 1000, or names that account differently, breaks the mounts at
+        # run time rather than at build time.
+        run: |
+          id_out=$(docker run --rm --entrypoint id cvx-sandbox-ci)
+          echo "sandbox id: $id_out"
+          echo "$id_out" | grep -q 'uid=1000(agent)' || { echo "expected uid=1000(agent)"; exit 1; }
+          echo "$id_out" | grep -q 'gid=1000(agent)' || { echo "expected gid=1000(agent)"; exit 1; }
