@@ -2,6 +2,6 @@
 # authenticated, and a working `claude -p` (headless) run.
 # Keep direct inputs exact. `requirements.lock` additionally locks the complete
 # transitive graph with hashes for CI and the sandbox image.
-a2a-sdk[http-server]==1.1.2
+a2a-sdk[http-server]==1.1.5
 starlette==1.6.0
 uvicorn==0.53.0
