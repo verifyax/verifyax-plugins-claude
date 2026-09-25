@@ -152,15 +152,17 @@ After we publish changes, refresh with:
 
 ## Also available as a Claude.ai skill
 
-If you use [Claude.ai](https://claude.ai) (not Claude Code), grab `verifyax-api.zip` from the
+If you use [Claude.ai](https://claude.ai) (not Claude Code), grab the bundle from the
 [Releases](https://github.com/verifyax/verifyax-plugins-claude/releases) page, then in Claude.ai go
 to **Customize → Skills**, click **+**, choose **+ Create skill**, and select **Upload a skill**.
 Same SKILL.md, different wrapper.
 
 > [!NOTE]
-> Claude.ai's uploader documents a **`.zip`**. Releases also carry an identical `.skill` file for
-> older links, but upload the `.zip` — **Settings → Capabilities → Skills** only views and toggles
-> skills you already have; it is not where you upload one.
+> Each release carries the same bundle under two names — `verifyax-api.zip` and
+> `verifyax-api.skill`. They are byte-identical, and **both upload successfully** (tested), so take
+> either; `.zip` just matches the extension Claude.ai's own docs name. Note that
+> **Settings → Capabilities → Skills** only views and toggles skills you already have — uploading
+> happens under **Customize → Skills**.
 
 ### Building the `.skill` bundle (maintainers)
 
