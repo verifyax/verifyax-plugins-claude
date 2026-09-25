@@ -2,10 +2,11 @@
 #
 # build-skill.sh — package a plugin's skill into a Claude.ai `.skill` bundle.
 #
-# A `.skill` file is just a zip whose top level contains a single folder named
-# after the skill, with SKILL.md (and any resource files) inside it. The bundle
-# is what Claude.ai users upload via Settings → Capabilities → Skills, and what
-# we attach to a GitHub Release.
+# The bundle is a zip whose top level contains a single folder named after the
+# skill, with SKILL.md (and any resource files) inside it -- the layout Claude.ai
+# requires. We emit it twice: `<skill>.zip`, which is the extension Claude.ai's
+# uploader documents, and `<skill>.skill`, kept so links to older release assets
+# keep working. Both files are byte-identical archives.
 #
 # Usage:
 #   scripts/build-skill.sh [plugin] [skill]
@@ -14,10 +15,10 @@
 #   skill    skill directory name under the plugin  (default: same as plugin)
 #
 # Examples:
-#   scripts/build-skill.sh                      # builds dist/verifyax-api.skill
+#   scripts/build-skill.sh                      # builds dist/verifyax-api.zip
 #   scripts/build-skill.sh verifyax-api         # same
 #
-# Output: dist/<skill>.skill
+# Output: dist/<skill>.zip  (and dist/<skill>.skill, same bytes)
 #
 set -euo pipefail
 
@@ -27,7 +28,8 @@ SKILL="${2:-$PLUGIN}"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SKILL_DIR="$REPO_ROOT/plugins/$PLUGIN/skills/$SKILL"
 DIST_DIR="$REPO_ROOT/dist"
-OUT="$DIST_DIR/$SKILL.skill"
+OUT="$DIST_DIR/$SKILL.zip"
+OUT_LEGACY="$DIST_DIR/$SKILL.skill"
 
 if [[ ! -f "$SKILL_DIR/SKILL.md" ]]; then
   echo "error: $SKILL_DIR/SKILL.md not found" >&2
@@ -47,9 +49,12 @@ trap 'rm -rf "$STAGE"' EXIT
 cp -R "$SKILL_DIR" "$STAGE/$SKILL"
 
 mkdir -p "$DIST_DIR"
-rm -f "$OUT"
+rm -f "$OUT" "$OUT_LEGACY"
 ( cd "$STAGE" && zip -r -X "$OUT" "$SKILL" >/dev/null )
+# Same archive under the legacy extension, so older release links keep resolving.
+cp "$OUT" "$OUT_LEGACY"
 
 echo "Built $OUT${VERSION:+ (v$VERSION)}"
+echo "Built $OUT_LEGACY (same bytes, legacy extension)"
 echo "Contents:"
 zip -sf "$OUT" | sed 's/^/  /'

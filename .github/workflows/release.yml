@@ -77,8 +77,10 @@ jobs:
         env:
           PLUGIN: ${{ steps.tag.outputs.plugin }}
         run: |
-          out="dist/$PLUGIN.skill"
+          out="dist/$PLUGIN.zip"
           test -f "$out" || { echo "expected $out to exist"; exit 1; }
+          test -f "dist/$PLUGIN.skill" || { echo "expected dist/$PLUGIN.skill to exist"; exit 1; }
+          cmp "$out" "dist/$PLUGIN.skill" || { echo ".zip and .skill differ"; exit 1; }
           top=$(unzip -Z1 "$out" | cut -d/ -f1 | sort -u)
           [ "$top" = "$PLUGIN" ] || { echo "unexpected top-level entry: [$top]"; exit 1; }
           unzip -Z1 "$out" | grep -qx "$PLUGIN/SKILL.md" \
@@ -99,4 +101,4 @@ jobs:
               --title "$PLUGIN $VERSION" \
               --notes "See [\`CHANGELOG.md\`](https://github.com/${GITHUB_REPOSITORY}/blob/main/CHANGELOG.md) for release notes."
           fi
-          gh release upload "$TAG" "dist/$PLUGIN.skill" --clobber
+          gh release upload "$TAG" "dist/$PLUGIN.zip" "dist/$PLUGIN.skill" --clobber

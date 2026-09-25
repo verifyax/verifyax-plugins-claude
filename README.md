@@ -152,22 +152,30 @@ After we publish changes, refresh with:
 
 ## Also available as a Claude.ai skill
 
-If you use [Claude.ai](https://claude.ai) (not Claude Code), grab the `.skill` bundle from the
-Releases page and upload it via **Settings → Capabilities → Skills**. Same SKILL.md, different
-wrapper.
+If you use [Claude.ai](https://claude.ai) (not Claude Code), grab `verifyax-api.zip` from the
+[Releases](https://github.com/verifyax/verifyax-plugins-claude/releases) page, then in Claude.ai go
+to **Customize → Skills**, click **+**, choose **+ Create skill**, and select **Upload a skill**.
+Same SKILL.md, different wrapper.
+
+> [!NOTE]
+> Claude.ai's uploader documents a **`.zip`**. Releases also carry an identical `.skill` file for
+> older links, but upload the `.zip` — **Settings → Capabilities → Skills** only views and toggles
+> skills you already have; it is not where you upload one.
 
 ### Building the `.skill` bundle (maintainers)
 
 The bundle attached to each release is built from the plugin's skill directory with:
 
 ```bash
-scripts/build-skill.sh            # → dist/verifyax-api.skill
+scripts/build-skill.sh            # → dist/verifyax-api.zip (+ .skill, same bytes)
 scripts/build-skill.sh <plugin> <skill>   # for any other plugin/skill
 ```
 
-A `.skill` file is just a zip whose top level is a single `<skill>/` folder containing `SKILL.md`
-(and any resource files). After a version bump, rebuild and attach the new `dist/<skill>.skill` to
-the GitHub Release. Build output lives in `dist/` (gitignored).
+The bundle is a zip whose top level is a single `<skill>/` folder containing `SKILL.md` (and any
+resource files) — the layout Claude.ai requires. The script emits it twice: `.zip`, the extension
+Claude.ai's uploader documents, and `.skill`, kept so links to older release assets keep working.
+The release workflow attaches both automatically on a `verifyax-api-v*` tag. Build output lives in
+`dist/` (gitignored).
 
 ## Versioning
 

@@ -34,11 +34,15 @@ jobs:
       - name: Build and verify the .skill bundle
         run: |
           bash scripts/build-skill.sh verifyax-api
-          test -f dist/verifyax-api.skill || { echo "bundle was not produced"; exit 1; }
+          test -f dist/verifyax-api.zip || { echo "zip bundle was not produced"; exit 1; }
+          test -f dist/verifyax-api.skill || { echo "legacy bundle was not produced"; exit 1; }
+          # The two assets must stay the same archive, or users get different content
+          # depending on which extension they happened to download.
+          cmp dist/verifyax-api.zip dist/verifyax-api.skill             || { echo ".zip and .skill differ"; exit 1; }
           # Exactly one top-level entry, named after the skill, containing SKILL.md.
-          top=$(unzip -Z1 dist/verifyax-api.skill | cut -d/ -f1 | sort -u)
+          top=$(unzip -Z1 dist/verifyax-api.zip | cut -d/ -f1 | sort -u)
           [ "$top" = "verifyax-api" ] || { echo "unexpected top-level entry: [$top]"; exit 1; }
-          unzip -Z1 dist/verifyax-api.skill | grep -qx "verifyax-api/SKILL.md" \
+          unzip -Z1 dist/verifyax-api.zip | grep -qx "verifyax-api/SKILL.md" \
             || { echo "verifyax-api/SKILL.md missing from the bundle"; exit 1; }
           echo "bundle OK"
 
