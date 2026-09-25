@@ -48,6 +48,31 @@ STAGE="$(mktemp -d)"
 trap 'rm -rf "$STAGE"' EXIT
 cp -R "$SKILL_DIR" "$STAGE/$SKILL"
 
+# Normalise CRLF -> LF in the staged text before zipping. A Windows
+# core.autocrlf checkout hands us CRLF working-tree files, so the bundle would
+# ship line endings that differ from the committed source. CI never catches it
+# because CI runs on Linux; the asset a maintainer uploads by hand is the one
+# that breaks. A published artifact should be identical whoever built it.
+# Strip unconditionally and compare sizes rather than testing first: git-bash's
+# grep opens files in text mode and drops CR before matching, so a "does this
+# file contain CR" test silently reports no on the very platform that needs the
+# fix. Byte counts do not lie.
+CR="$(printf '\r')"
+normalised=0
+while IFS= read -r f; do
+  case "$f" in
+    *.md | *.txt | *.json | *.yaml | *.yml)
+      before=$(wc -c <"$f")
+      tr -d "$CR" <"$f" >"$f.lf" && mv "$f.lf" "$f"
+      after=$(wc -c <"$f")
+      [ "$before" -eq "$after" ] || normalised=$((normalised + 1))
+      ;;
+  esac
+done <<EOF
+$(find "$STAGE/$SKILL" -type f)
+EOF
+[ "$normalised" -eq 0 ] || echo "note: normalised CRLF -> LF in $normalised file(s) before packaging"
+
 mkdir -p "$DIST_DIR"
 rm -f "$OUT" "$OUT_LEGACY"
 ( cd "$STAGE" && zip -r -X "$OUT" "$SKILL" >/dev/null )
