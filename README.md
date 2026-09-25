@@ -40,16 +40,25 @@ it exposes yours for VerifyAX to score (and drives `verifyax-api` under the hood
 
 ### Where each plugin runs
 
-These plugins target **Claude Code**. Two of them need a local machine, so they don't run in
-Claude.ai chat or Cowork — [plugins with local MCP servers don't load
+These plugins target **Claude Code**. Two of them need a local machine, so they don't install and
+run in Claude.ai chat or Cowork — [plugins with local MCP servers don't load
 there](https://support.claude.com/en/articles/13837440-use-plugins-in-claude), and neither do
 plugins that shell out to local binaries.
 
-| Plugin                  | Claude Code | Claude.ai chat / Cowork                                            |
-| ----------------------- | ----------- | ------------------------------------------------------------------ |
-| `verifyax-api`          | ✅          | ✅ — it's a pure skill (also uploadable as a `.skill`, see below)   |
-| `verifyax-mcp`          | ✅          | ❌ — launches a local `npx` MCP server                             |
-| `verifyax-claude-agent` | ✅          | ❌ — needs local Python, the `claude` CLI, and a tunnel            |
+| Plugin                  | Claude Code | Claude.ai chat / Cowork                                          |
+| ----------------------- | ----------- | ---------------------------------------------------------------- |
+| `verifyax-api`          | ✅          | ✅ — it's a pure skill (also uploadable as a bundle, see below)   |
+| `verifyax-mcp`          | ✅          | ❌ as a plugin — but see the connector route below                |
+| `verifyax-claude-agent` | ✅          | ❌ — needs local Python, the `claude` CLI, and a tunnel           |
+
+> [!TIP]
+> **On Claude.ai you don't need the `verifyax-mcp` plugin — use the hosted endpoint directly.** The
+> plugin can't run there because it launches a local MCP server, but that constraint doesn't apply
+> to the hosted one. In **Settings → Connectors → Add custom connector**, point at
+> `https://mcp.verifyax.com/mcp`, choose **No sign-in**, and add a request header `Authorization`
+> with the value `Bearer sk-ver-api-...`. All 12 tools appear, with per-tool approval controls.
+> See the [MCP server README](https://github.com/verifyax/verifyax-mcp#supported-clients) for
+> details. Not yet tested in Cowork.
 
 On an **Enterprise plan your admin may block this entirely** — org policy can restrict which
 marketplaces users may add, mark individual plugins unavailable, or disable local MCP servers
