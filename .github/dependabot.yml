@@ -12,6 +12,16 @@ updates:
     directory: /plugins/verifyax-claude-agent/sandbox
     schedule:
       interval: weekly
+    ignore:
+      # Node majors are a deliberate choice, not a bump. Only even majors reach
+      # LTS, and not until the October after release, so "newest" is routinely
+      # the wrong answer for this image -- Dependabot offered 26 (Current)
+      # twice, and it breaks the build: node:26-slim ships a distro `packaging`
+      # with no RECORD file, which pip refuses to replace under
+      # --break-system-packages. Patch and minor updates on the LTS line still
+      # flow, which is what carries security fixes.
+      - dependency-name: "node"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: /
