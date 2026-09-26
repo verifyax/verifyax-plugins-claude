@@ -67,12 +67,20 @@ jobs:
         # requirements.txt: CI and the sandbox image both use the lock, so those
         # PRs went green while every real environment kept the old version, and
         # the two files silently disagreed about what this plugin depends on.
+        # Regenerate inside python:3.12-slim rather than on the runner. A
+        # diff-based check is only meaningful if it reproduces the conditions
+        # that produced the lock, and the runner's pip is newer than pip-tools
+        # 7.5.1 supports -- it fails with
+        # "'InstallRequirement' object has no attribute 'use_pep517'" before it
+        # can compare anything.
         run: |
-          python -m pip install --quiet pip-tools==7.5.1
           cp plugins/verifyax-claude-agent/adapter/requirements.lock /tmp/lock.before
-          pip-compile --quiet --generate-hashes --no-emit-index-url \
-            --output-file=plugins/verifyax-claude-agent/adapter/requirements.lock \
-            --strip-extras plugins/verifyax-claude-agent/adapter/requirements.txt
+          docker run --rm -v "$PWD:/w" -w /w python:3.12-slim sh -c '
+            pip install --quiet pip-tools==7.5.1
+            pip-compile --quiet --generate-hashes --no-emit-index-url \
+              --output-file=plugins/verifyax-claude-agent/adapter/requirements.lock \
+              --strip-extras plugins/verifyax-claude-agent/adapter/requirements.txt
+          '
           if ! diff -u /tmp/lock.before \
                plugins/verifyax-claude-agent/adapter/requirements.lock; then
             echo "::error::requirements.lock is stale. Regenerate it with the command in its header and commit the result."
