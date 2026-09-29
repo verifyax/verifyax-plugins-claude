@@ -153,18 +153,25 @@ A quick glossary so the examples above make sense:
 
 ## Update
 
-After we publish changes, refresh with:
+**Installed plugins do not update themselves.** Claude Code keeps the version you installed until
+you refresh the marketplace and reinstall — a machine that installed in May can still be running the
+May build months later. Refresh with:
 
 ```
 /plugin marketplace update verifyax-plugins
+/plugin install verifyax-api@verifyax-plugins             # repeat for each plugin you use
 ```
+
+Check what you actually have with `/plugin`, and compare against the current versions listed under
+[Versioning](#versioning) below.
 
 ## Also available as a Claude.ai skill
 
-If you use [Claude.ai](https://claude.ai) (not Claude Code), grab the bundle from the
-[Releases](https://github.com/verifyax/verifyax-plugins-claude/releases) page, then in Claude.ai go
-to **Customize → Skills**, click **+**, choose **+ Create skill**, and select **Upload a skill**.
-Same SKILL.md, different wrapper.
+If you use [Claude.ai](https://claude.ai) (not Claude Code), download
+[`verifyax-api.zip`](https://github.com/verifyax/verifyax-plugins-claude/releases/download/verifyax-api-v0.3.0/verifyax-api.zip)
+(or browse [all releases](https://github.com/verifyax/verifyax-plugins-claude/releases)), then in
+Claude.ai go to **Customize → Skills**, click **+**, choose **+ Create skill**, and select
+**Upload a skill**. Same SKILL.md, different wrapper.
 
 > [!NOTE]
 > Each release carries the same bundle under two names — `verifyax-api.zip` and
@@ -172,6 +179,11 @@ Same SKILL.md, different wrapper.
 > either; `.zip` just matches the extension Claude.ai's own docs name. Note that
 > **Settings → Capabilities → Skills** only views and toggles skills you already have — uploading
 > happens under **Customize → Skills**.
+>
+> **Link to the version tag, never to `/releases/latest/download/...`.** Each plugin here is tagged
+> and released independently, so `latest` is whichever plugin shipped most recently — today that is
+> `verifyax-claude-agent`, which carries no `.zip` at all, and a `latest/download` link for the skill
+> returns **404**. Use the pinned URL above and bump it when the skill version changes.
 
 ### Building the `.skill` bundle (maintainers)
 
