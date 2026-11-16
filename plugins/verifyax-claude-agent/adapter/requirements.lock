@@ -4,9 +4,9 @@
 #
 #    pip-compile --generate-hashes --no-emit-index-url --no-index --output-file=plugins/verifyax-claude-agent/adapter/requirements.lock --strip-extras plugins/verifyax-claude-agent/adapter/requirements.txt
 #
-a2a-sdk==1.2.2 \
-    --hash=sha256:09be001a90fae9634d54041471feca1014201ec22f7107f0883309a2b4027a15 \
-    --hash=sha256:f2aa9692f3e3034f58ebff501e091d43affa416878c734fd63016ae0b8ea8c66
+a2a-sdk==1.3.0 \
+    --hash=sha256:73694717de50f36aaebd57b8fc6636ecaa825eb0d4437984fa2cd17f703a6808 \
+    --hash=sha256:b94a73b5dc7ff1afe5f11d324480f83386a64d02b8a6b719baf013595284cc6c
     # via -r plugins/verifyax-claude-agent/adapter/requirements.txt
 aiologic==0.17.1 \
     --hash=sha256:2e1b93b9e88ced318c2a63ad7b382688f40cbfe40e3d42258d49dc9c5aea179d \
@@ -579,9 +579,9 @@ sse-starlette==3.4.11 \
     --hash=sha256:1bae716c02f3e6f294be41ff333220692dae7c3cbab077c900f159676719dade \
     --hash=sha256:c7b2244bdff016fe7f64e10075e89a3e6bbf899649cc89b0fe884b5545042453
     # via a2a-sdk
-starlette==1.8.0 \
-    --hash=sha256:1565dc0b35d5737a271ed1e0e04e949f4e81198799f216d2667b0a0fb9cf9522 \
-    --hash=sha256:dfdd6b29c26483288088d990eee59631dedadd66ce20d203402a7ca8e3c4656f
+starlette==1.10.0 \
+    --hash=sha256:478c0ab3b4ced6e82719849c118fa406f0278a3499c1a898cd15cd31bdc38ce4 \
+    --hash=sha256:b8399098d4c1e3522734f7235dc79b1fc967f96cf139c81e0fa30479e0685f9b
     # via
     #   -r plugins/verifyax-claude-agent/adapter/requirements.txt
     #   a2a-sdk
